@@ -1,4 +1,4 @@
-package com.healing.pet.model.TestConnection.Resource.Theme;
+package com.healing.pet.model.TestConnection.Theme.Theme;
 
 import javax.swing.*;
 import javax.swing.border.Border;
