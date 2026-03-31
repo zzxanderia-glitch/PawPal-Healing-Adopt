@@ -38,28 +38,34 @@ public class MatchService {
      */
     private int calculateScore(Animal pet, UserPreferences prefs) {
         int score = 0;
-        String careGuide = pet.getCareGuide().toLowerCase();
+        String careGuide = pet.getCareGuide();
 
-        if (prefs.getPersonality() != null && careGuide.contains(prefs.getPersonality().toLowerCase())) {
+        if (prefs.getPersonality() != null && careGuide.contains(prefs.getPersonality())) {
             score += 30;
         }
-        if (prefs.getLivingSpace() != null && careGuide.contains(prefs.getLivingSpace().toLowerCase())) {
-            score += 20;
+        if (prefs.getLivingSpace() != null) {
+            if (careGuide.contains(prefs.getLivingSpace())) {
+                score += 20;
+            } else if (prefs.getLivingSpace().equals("小户型") && careGuide.contains("公寓")) {
+                score += 20;
+            } else if (prefs.getLivingSpace().equals("大空间") && careGuide.contains("别墅")) {
+                score += 20;
+            }
         }
-        if (prefs.getCompanionTime() != null && careGuide.contains(prefs.getCompanionTime().toLowerCase())) {
+        if (prefs.getCompanionTime() != null && careGuide.contains(prefs.getCompanionTime())) {
             score += 25;
         }
         return score;
     }
 
-    // 临时模拟数据（等成员A上传DAO后删除此方法）
+    // 临时模拟数据（等成员 A 上传 DAO 后删除此方法）
     private List<Animal> getMockPets() {
         List<Animal> list = new ArrayList<>();
-        // 假设 Cat 和 Dog 有构造器 (String name, String careGuide, ...)
-        // 如果没有，请根据实际 Animal 类的构造器调整
-        list.add(new Cat(0032,"咪咪", 2, "温顺，适合公寓，需要每天陪伴", "cat1.jpg"));
-        list.add(new Dog(0076,"旺财", 1,"活泼，需要大空间，喜欢运动", "dog1.jpg", "金毛"));
-        list.add(new Cat(0123,"小花", 1,"独立，适合小空间，不需要太多陪伴", "cat2.jpg"));
+        list.add(new Cat(32, "咪咪", 2, "温顺，适合公寓，需要每天陪伴", "cat1.jpg"));
+        list.add(new Dog(76, "旺财", 1, "活泼，需要大空间，喜欢运动", "dog1.jpg", "金毛"));
+        list.add(new Cat(123, "小花", 1, "独立，适合小空间，不需要太多陪伴", "cat2.jpg"));
+        list.add(new Dog(77, "乐乐", 3, "聪明，适合公寓，陪伴时间适中", "dog2.jpg", "泰迪"));
+        list.add(new Cat(99, "小白", 2, "粘人，适合别墅，需要大量陪伴", "cat3.jpg"));
         return list;
     }
     public static void main(String[] args) {

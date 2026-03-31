@@ -1,10 +1,8 @@
-package com.healing.pet.model.TestConnection.Theme.ui.siderbar;
+package com.healing.pet.ui.sidebar;
 
-
-
-import com.healing.pet.model.TestConnection.Theme.Theme.Theme;
-import com.healing.pet.model.TestConnection.Theme.ui.MainFrame;
-import com.healing.pet.model.TestConnection.Theme.ui.content.ContentPanel;
+import com.healing.pet.ui.Theme.Theme;
+import com.healing.pet.view.MainFrame;
+import com.healing.pet.ui.content.ContentPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,6 +14,7 @@ public class SidebarPanel extends JPanel {
     private ContentPanel contentPanel;
     private MainFrame mainFrame;
     private JButton homeButton;
+    private JButton matchButton;
     private JButton settingButton;
 
     public SidebarPanel(ContentPanel contentPanel, MainFrame mainFrame) {
@@ -46,6 +45,10 @@ public class SidebarPanel extends JPanel {
         // 首页按钮
         homeButton = createStyledButton("首页", "home");
         add(homeButton);
+
+        // 匹配按钮
+        matchButton = createStyledButton("智能匹配", "match");
+        add(matchButton);
 
         // 设置按钮
         settingButton = createStyledButton("设置", "setting");
@@ -87,7 +90,7 @@ public class SidebarPanel extends JPanel {
 
     private void setActiveButton(JButton activeButton) {
         Theme theme = mainFrame.getCurrentTheme();
-        JButton[] buttons = {homeButton, settingButton};
+        JButton[] buttons = {homeButton, matchButton, settingButton};
         for (JButton btn : buttons) {
             if (btn == activeButton) {
                 btn.setBackground(theme.getSidebarButtonActiveBackground());

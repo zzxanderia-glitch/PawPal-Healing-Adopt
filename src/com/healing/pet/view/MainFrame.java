@@ -1,52 +1,89 @@
-package com.healing.pet.view;
+package com.healing.pet.view; // 1. 修正包名，属于 view 层
+
+// 2. 修正后的干净导入（前提是你已经按照我之前的建议移动了文件）
+import com.formdev.flatlaf.FlatLightLaf;
+import com.healing.pet.ui.Theme.LightTheme;
+import com.healing.pet.ui.Theme.Theme;
+import com.healing.pet.ui.content.ContentPanel;
+import com.healing.pet.ui.sidebar.SidebarPanel;
 
 import javax.swing.*;
 import java.awt.*;
 
 /**
- * 项目主窗体 —— 由组长搭建框架
+ * 🐾 萌友速配 - 项目启动主入口
  */
 public class MainFrame extends JFrame {
 
-    public MainFrame() {
-        // 1. 设置窗口基本属性
-        setTitle("🐾 萌友速配 - 温暖归宿平台");
-        setSize(900, 600);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null); // 窗口居中
+    private SidebarPanel sidebarPanel;
+    private ContentPanel contentPanel;
+    private Theme currentTheme;
 
-        // 2. 设置布局
+    public MainFrame() {
+        // --- 初始化主题 ---
+        currentTheme = new LightTheme();
+        currentTheme.applyTheme();
+
+        // --- 设置窗口基本属性 ---
+        setTitle("❤️萌友速配 - 温暖归宿平台");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(currentTheme.getWindowWidth(), currentTheme.getWindowHeight());
+        setLocationRelativeTo(null); // 居中展示
         setLayout(new BorderLayout());
 
-        // 3. 顶部：欢迎语（治愈系文案）
-        JPanel topPanel = new JPanel();
-        topPanel.setBackground(new Color(255, 245, 225)); // 奶黄色背景
-        JLabel welcomeLabel = new JLabel("每一个生命都值得被温柔以待 ✨");
-        welcomeLabel.setFont(new Font("微软雅黑", Font.BOLD, 18));
-        topPanel.add(welcomeLabel);
-        add(topPanel, BorderLayout.NORTH);
+        // --- 初始化核心组件 ---
+        // 1. 中央内容区
+        contentPanel = new ContentPanel(this);
+        add(contentPanel, BorderLayout.CENTER);
 
-        // 4. 中间：内容展示区（以后放宠物卡片）
-        JPanel centerPanel = new JPanel();
-        centerPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 20));
-        centerPanel.setBackground(Color.WHITE);
+        // 2. 左侧导航栏 (注意：修正了 sidebar 的拼写)
+        sidebarPanel = new SidebarPanel(contentPanel, this);
+        add(sidebarPanel, BorderLayout.WEST);
 
-        // 临时放一个按钮测试一下
-        JButton testBtn = new JButton("点我开启缘分匹配");
-        centerPanel.add(testBtn);
-
-        add(new JScrollPane(centerPanel), BorderLayout.CENTER);
-
-        // 5. 底部：状态栏
-        JLabel statusLabel = new JLabel("  当前数据库状态：已连接 ❤️");
-        statusLabel.setFont(new Font("宋体", Font.PLAIN, 12));
-        add(statusLabel, BorderLayout.SOUTH);
+        setVisible(true);
     }
 
-    public static void main(String[] args) {
-        // 组长温馨提示：这里以后要切换皮肤（FlatLaf）
+    /**
+     * 动态切换主题（高分 OOP 点：多态的应用）
+     */
+    public void applyTheme(Theme newTheme) {
+        this.currentTheme = newTheme;
         SwingUtilities.invokeLater(() -> {
-            new MainFrame().setVisible(true);
+            try {
+                getContentPane().removeAll();
+                newTheme.applyTheme();
+
+                // 重新装配
+                contentPanel = new ContentPanel(this);
+                add(contentPanel, BorderLayout.CENTER);
+                sidebarPanel = new SidebarPanel(contentPanel, this);
+                add(sidebarPanel, BorderLayout.WEST);
+
+                setSize(newTheme.getWindowWidth(), newTheme.getWindowHeight());
+                revalidate();
+                repaint();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
+    }
+
+    public Theme getCurrentTheme() {
+        return currentTheme;
+    }
+
+    /**
+     * 🚀 项目点火开关
+     */
+    public static void main(String[] args) {
+        // 1. 加载现代 UI 皮肤
+        try {
+            FlatLightLaf.setup();
+        } catch (Exception e) {
+            System.err.println("皮肤加载失败");
+        }
+
+        // 2. 启动程序
+        SwingUtilities.invokeLater(MainFrame::new);
     }
 }
