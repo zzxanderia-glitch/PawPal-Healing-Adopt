@@ -1,6 +1,6 @@
-package com.healing.pet.model.TestConnection.Theme.ui.content;
+package com.healing.pet.ui.content;
 
-import com.healing.pet.model.TestConnection.Theme.ui.MainFrame;
+import com.healing.pet.view.MainFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,9 +23,11 @@ public class ContentPanel extends JPanel {
 
         // 添加不同的面板
         HomePanel homePanel = new HomePanel(mainFrame);
+        MatchPanel matchPanel = new MatchPanel(mainFrame);
         SettingPannel settingPanel = new SettingPannel(mainFrame);
 
         contentCards.add(homePanel, "home");
+        contentCards.add(matchPanel, "match");
         contentCards.add(settingPanel, "setting");
 
         add(contentCards, BorderLayout.CENTER);

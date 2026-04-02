@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/PawPal.iml" filepath="$PROJECT_DIR$/PawPal.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PawPal-Healing-Adopt.iml" filepath="$PROJECT_DIR$/PawPal-Healing-Adopt.iml" />
     </modules>
   </component>
 </project>

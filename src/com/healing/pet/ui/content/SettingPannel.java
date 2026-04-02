@@ -1,11 +1,11 @@
-package com.healing.pet.model.TestConnection.Theme.ui.content;
+package com.healing.pet.ui.content;
 
 
 
-import com.healing.pet.model.TestConnection.Theme.Theme.DarkTheme;
-import com.healing.pet.model.TestConnection.Theme.Theme.LightTheme;
-import com.healing.pet.model.TestConnection.Theme.Theme.Theme;
-import com.healing.pet.model.TestConnection.Theme.ui.MainFrame;
+import com.healing.pet.ui.Theme.DarkTheme;
+import com.healing.pet.ui.Theme.LightTheme;
+import com.healing.pet.ui.Theme.Theme;
+import com.healing.pet.view.MainFrame;
 
 import javax.swing.*;
 import java.awt.*;

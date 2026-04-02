@@ -9,9 +9,9 @@ import java.sql.SQLException;
  */
 public class DBUtils {
     // 数据库连接配置 (根据你本地 MySQL 修改)
-    private static final String URL = "jdbc:mysql://localhost:3306/pawpal_db?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8";
-    private static final String USER = "User";
-    private static final String PASSWORD = "123456789";
+    private static final String URL = "jdbc:mysql://localhost:3306/pawpal_db?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8";
+    private static final String USER = "root";  // 改成你的 MySQL 用户名
+    private static final String PASSWORD = "123456789";  // 改成你的 MySQL 密码
 
     // 静态代码块加载驱动 (只需加载一次)
     static {
