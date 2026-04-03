@@ -1,7 +1,5 @@
 package healing.pet.service;
 
-import healing.pet.model.User;
-
 public class AuthService {
 
     /**
@@ -9,7 +7,7 @@ public class AuthService {
      * @param user 待注册的用户对象
      * @return 注册结果信息
      */
-    public String register(User user) {
+    public String register(main.java.healing.pet.model.User user) {
         String userId = user.getUserId();
         String password = user.getPassword();
 
@@ -45,7 +43,7 @@ public class AuthService {
      * @param user 待登录的用户对象
      * @return 登录结果信息
      */
-    public String login(User user) {
+    public String login(main.java.healing.pet.model.User user) {
         String userId = user.getUserId();
         String password = user.getPassword();
 

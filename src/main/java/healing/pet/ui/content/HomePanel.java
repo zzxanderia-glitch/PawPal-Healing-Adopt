@@ -1,12 +1,14 @@
 package healing.pet.ui.content;
 
 import healing.pet.model.Animal;
-import healing.pet.model.Cat;
-import healing.pet.model.Dog;
 import healing.pet.service.MatchService;
 import healing.pet.service.UserPreferences;
 import healing.pet.view.MainFrame;
 import healing.pet.view.components.PetCardPanel;
+
+import main.java.healing.pet.model.Cat;
+import main.java.healing.pet.model.Dog;
+
 
 import javax.swing.*;
 import java.awt.*;

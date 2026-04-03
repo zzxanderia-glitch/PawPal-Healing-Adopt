@@ -1,6 +1,5 @@
 package healing.pet.view;
 
-import healing.pet.model.User;
 import healing.pet.service.AuthService;
 
 import javax.swing.*;
@@ -47,7 +46,7 @@ public class RegisterFrame extends JFrame {
         registerBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                User user = new User();
+                main.java.healing.pet.model.User user = new main.java.healing.pet.model.User();
                 user.setUserId(userIdField.getText());
                 user.setPassword(new String(passwordField.getPassword()));
 

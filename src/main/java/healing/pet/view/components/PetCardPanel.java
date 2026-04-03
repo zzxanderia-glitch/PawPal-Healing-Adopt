@@ -3,6 +3,7 @@ package healing.pet.view.components;
 import healing.pet.model.Animal;
 import healing.pet.model.Cat;
 import healing.pet.model.Dog;
+import main.java.healing.pet.model.Animal;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,6 +41,9 @@ public class PetCardPanel extends JPanel {
         this.pet = pet;
         initCard();
         addMouseListener(new CardMouseListener());
+    }
+
+    public PetCardPanel(Animal pet) {
     }
 
     // 初始化卡片基础设置

@@ -1,12 +1,11 @@
 package healing.pet.ui.content;
 
 import healing.pet.model.Animal;
-import healing.pet.model.Cat;
-import healing.pet.model.Dog;
 import healing.pet.service.MatchService;
 import healing.pet.service.UserPreferences;
 import healing.pet.view.MainFrame;
 import healing.pet.view.components.PetCardPanel;
+import healing.pet.service.MatchService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -147,11 +146,11 @@ public class MatchPanel extends JPanel {
 
         if ("猫".equals(petType)) {
             matchedPets = matchedPets.stream()
-                    .filter(p -> p instanceof Cat)
+                    .filter(p -> p instanceof main.java.healing.pet.model.Cat)
                     .collect(Collectors.toList());
         } else if ("狗".equals(petType)) {
             matchedPets = matchedPets.stream()
-                    .filter(p -> p instanceof Dog)
+                    .filter(p -> p instanceof main.java.healing.pet.model.Dog)
                     .collect(Collectors.toList());
         }
 
