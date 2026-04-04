@@ -1,7 +1,5 @@
-package healing.pet.view; // 1. 修正包名，属于 view 层
+package healing.pet.view;
 
-// 2. 修正后的干净导入（前提是你已经按照我之前的建议移动了文件）
-import com.formdev.flatlaf.FlatLightLaf;
 import healing.pet.ui.Theme.LightTheme;
 import healing.pet.ui.Theme.Theme;
 import healing.pet.ui.content.ContentPanel;
@@ -11,14 +9,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.sql.SQLException;
 
-/**
- * 🐾 萌友速配 - 项目启动主入口
- */
 public class MainFrame extends JFrame {
 
     private SidebarPanel sidebarPanel;
     private ContentPanel contentPanel;
     private Theme currentTheme;
+    // 新增：管理员权限状态（任务要求：身份切换后更新）
+    private boolean isAdmin = false;
+
+
+    /**
+     * 动态切换主题（多态应用，原有方法保留）
+     */
 
     public MainFrame() throws SQLException {
         // --- 初始化主题 ---
@@ -35,17 +37,19 @@ public class MainFrame extends JFrame {
         // --- 初始化核心组件 ---
         // 1. 中央内容区
         contentPanel = new ContentPanel(this);
+        contentPanel.setAdminMode(isAdmin); // 设置初始权限状态
         add(contentPanel, BorderLayout.CENTER);
 
-        // 2. 左侧导航栏 (注意：修正了 sidebar 的拼写)
+        // 2. 左侧导航栏
         sidebarPanel = new SidebarPanel(contentPanel, this);
         add(sidebarPanel, BorderLayout.WEST);
 
         setVisible(true);
     }
 
+
     /**
-     * 动态切换主题（高分 OOP 点：多态的应用）
+     * 动态切换主题（多态应用，原有方法保留）
      */
     public void applyTheme(Theme newTheme) {
         this.currentTheme = newTheme;
@@ -54,8 +58,9 @@ public class MainFrame extends JFrame {
                 getContentPane().removeAll();
                 newTheme.applyTheme();
 
-                // 重新装配
+                // 重新装配组件
                 contentPanel = new ContentPanel(this);
+                contentPanel.setAdminMode(isAdmin); // 保持当前权限状态
                 add(contentPanel, BorderLayout.CENTER);
                 sidebarPanel = new SidebarPanel(contentPanel, this);
                 add(sidebarPanel, BorderLayout.WEST);
@@ -69,16 +74,42 @@ public class MainFrame extends JFrame {
         });
     }
 
+    // ====================== 【任务要求：身份切换后更新权限】 ======================
+    /**
+     * 更新管理员权限（SettingPanel 身份切换后调用）
+     * @param isAdmin true=管理员，false=普通用户
+     */
+    public void updateAdminPermission(boolean isAdmin) {
+        this.isAdmin = isAdmin;
+        // 通知内容面板更新权限（显示/隐藏管理员功能）
+        if (contentPanel != null) {
+            contentPanel.setAdminMode(isAdmin);
+        }
+        // 通知侧边栏更新权限（可选，根据你的需求）
+        if (sidebarPanel != null) {
+            sidebarPanel.updateAdminMode(isAdmin);
+        }
+        // 刷新界面
+        revalidate();
+        repaint();
+    }
+    // ============================================================================
+
     public Theme getCurrentTheme() {
         return currentTheme;
     }
 
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
     /**
-     * 🚀 项目点火开关
+     * 项目启动入口
      */
     public static void main(String[] args) {
         try {
-            FlatLightLaf.setup();
+            // 初始化FlatLaf皮肤（原有代码保留）
+            com.formdev.flatlaf.FlatLightLaf.setup();
         } catch (Exception e) {
             System.err.println("皮肤加载失败");
         }

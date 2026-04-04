@@ -99,4 +99,16 @@ public class SidebarPanel extends JPanel {
             }
         }
     }
+
+    /**
+     * 更新管理员模式（根据权限显示/隐藏管理员功能）
+     * @param isAdmin true=管理员，false=普通用户
+     */
+    public void updateAdminMode(boolean isAdmin) {
+        // 这里可以根据管理员权限显示或隐藏特定按钮
+        // 例如：管理员可能有额外的管理页面入口
+        // 目前先保留基础结构，后续可扩展
+        revalidate();
+        repaint();
+    }
 }
