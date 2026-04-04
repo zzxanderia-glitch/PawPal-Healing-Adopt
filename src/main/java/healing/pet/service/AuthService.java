@@ -1,6 +1,13 @@
 package healing.pet.service;
 
+import healing.pet.dao.UserDAO;
+import healing.pet.dao.UserDAOImpl;
+import healing.pet.model.User;
+
+import java.sql.SQLException;
+
 public class AuthService {
+    private UserDAO userDAO = new UserDAOImpl();
 
     /**
      * 用户注册方法
@@ -21,21 +28,44 @@ public class AuthService {
             return "密码不能为空";
         }
 
+        // 检查密码长度
+        if (password.length() < 6) {
+            return "密码长度不能少于6位";
+        }
+
         // 检查管理员账号格式 (G + 6位数字)
         if (userId.startsWith("G")) {
             if (!userId.matches("G\\d{6}")) {
                 return "管理员账号格式错误！必须是 G 开头后接6位数字。";
             }
+            user.setRole(1); // 管理员
         }
         // 检查普通用户账号格式 (6位数字)
         else {
             if (!userId.matches("\\d{6}")) {
                 return "普通用户账号格式错误！必须是6位数字。";
             }
+            user.setRole(0); // 普通用户
         }
 
-        // 所有检查通过，注册成功
-        return "注册成功！欢迎加入宠物领养系统。";
+        // 检查账号是否已存在
+        try {
+            User existingUser = userDAO.findByUserId(userId);
+            if (existingUser != null) {
+                return "该账号已被注册，请直接登录或使用其他账号。";
+            }
+
+            // 插入新用户
+            boolean success = userDAO.insertUser(user);
+            if (success) {
+                return "注册成功！欢迎加入宠物领养系统。";
+            } else {
+                return "注册失败，请稍后重试。";
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "注册失败：数据库错误 - " + e.getMessage();
+        }
     }
 
     /**
@@ -52,13 +82,31 @@ public class AuthService {
             return "账号或密码不能为空！";
         }
 
-        // 检查账号格式是否正确（通过User类的方法判断）
-        if (!user.isAdmin() && !user.isNormalUser()) {
-            return "账号格式不正确！";
+        // 检查账号格式是否正确
+        if (!userId.matches("G\\d{6}") && !userId.matches("\\d{6}")) {
+            return "账号格式不正确！普通用户为6位数字，管理员为G+6位数字。";
         }
 
-        // 在实际项目中，这里应该去数据库验证账号密码是否匹配
-        // 本示例中，只要格式正确即视为登录成功
-        return "登录成功！欢迎回来，" + (user.isAdmin() ? "管理员" : "用户") + "。";
+        try {
+            // 从数据库查询用户
+            User dbUser = userDAO.findByUserId(userId);
+
+            if (dbUser == null) {
+                return "账号不存在，请先注册！";
+            }
+
+            // 验证密码
+            if (!dbUser.getPassword().equals(password)) {
+                return "密码错误，请重新输入！";
+            }
+
+            // 登录成功，复制用户信息
+            user.setRole(dbUser.getRole());
+            return "登录成功！欢迎回来，" + (user.isAdmin() ? "管理员" : "用户") + "。";
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "登录失败：数据库错误 - " + e.getMessage();
+        }
     }
 }
