@@ -1,4 +1,4 @@
-package main.java.healing.pet.model;
+package healing.pet.model;
 
 import healing.pet.model.Animal;
 

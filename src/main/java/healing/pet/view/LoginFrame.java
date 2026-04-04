@@ -53,7 +53,7 @@ public class LoginFrame extends JFrame {
         loginBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                main.java.healing.pet.model.User user = new main.java.healing.pet.model.User();
+                healing.pet.model.User user = new healing.pet.model.User();
                 user.setUserId(userIdField.getText());
                 user.setPassword(new String(passwordField.getPassword()));
 

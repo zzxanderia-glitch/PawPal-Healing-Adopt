@@ -6,7 +6,7 @@ import java.util.List;
 
 public class PetDAOTest {
     public static void main(String[] args) {
-        PetDAO dao = new main.java.healing.pet.dao.PetDAOImpl();
+        PetDAO dao = new healing.pet.dao.PetDAOImpl();
 
         try {
             List<Animal> pets = dao.getAllPets();

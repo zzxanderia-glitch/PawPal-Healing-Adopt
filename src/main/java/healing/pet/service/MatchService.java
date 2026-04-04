@@ -34,7 +34,6 @@ public class MatchService {
      * @return 排序后的宠物列表
      */
     public List<Animal> match(UserPreferences preferences) throws SQLException {
-        // 从数据库获取所有待领养宠物
         List<Animal> allPets = petDAO.getAllPets();
 
         // 为每只宠物计算特征向量
@@ -210,6 +209,19 @@ public class MatchService {
                 healthCare, shedding, budget};
     }
 
+
+    public static void main(String[] args) throws SQLException {
+        MatchService service = new MatchService();
+        UserPreferences prefs = new UserPreferences(4, 4, 5, 3, 2, 3);
+        List<Animal> result = service.match(prefs);
+
+        System.out.println("匹配结果（按契合度从高到低）：");
+        for (int i = 0; i < result.size(); i++) {
+            Animal pet = result.get(i);
+            System.out.println((i+1) + ". " + pet.getName() + " (" + pet.getClass().getSimpleName() + ")");
+        }
+    }
+
     /**
      * 加权余弦相似度计算
      * @param userVec 用户偏好向量
@@ -224,6 +236,7 @@ public class MatchService {
             dot += weightedUser * weightedPet;
             normUser += weightedUser * weightedUser;
             normPet += weightedPet * weightedPet;
+
         }
         if (normUser == 0 || normPet == 0) return 0;
         return dot / (Math.sqrt(normUser) * Math.sqrt(normPet));

@@ -1,10 +1,10 @@
-package main.java.healing.pet.dao;
+package healing.pet.dao;
 
 import healing.pet.dao.PetDAO;
 import healing.pet.model.Animal;
-import main.java.healing.pet.model.Cat;
-import main.java.healing.pet.model.Dog;
-import main.java.healing.pet.util.DBUtils;
+import healing.pet.model.Cat;
+import healing.pet.model.Dog;
+import healing.pet.util.DBUtils;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package main.java.healing.pet.util;
+package healing.pet.util;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

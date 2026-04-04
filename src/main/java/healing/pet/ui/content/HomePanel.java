@@ -1,14 +1,12 @@
 package healing.pet.ui.content;
 
 import healing.pet.model.Animal;
+import healing.pet.model.Cat;
+import healing.pet.model.Dog;
 import healing.pet.service.MatchService;
 import healing.pet.service.UserPreferences;
 import healing.pet.view.MainFrame;
 import healing.pet.view.components.PetCardPanel;
-
-import main.java.healing.pet.model.Cat;
-import main.java.healing.pet.model.Dog;
-
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,9 +46,9 @@ public class HomePanel extends JPanel {
     private void loadPets() throws SQLException {
         petsPanel.removeAll();
 
-        UserPreferences defaultPrefs = new UserPreferences(3,3,3,3,3,3);
+        UserPreferences defaultPrefs = new UserPreferences(3, 3, 3, 3, 3, 3);
         List<Animal> pets = matchService.match(defaultPrefs);
-        
+
         System.out.println("HomePanel: 接收到 " + pets.size() + " 只宠物");
 
         if (pets == null || pets.isEmpty()) {
