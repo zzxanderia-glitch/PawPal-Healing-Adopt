@@ -48,7 +48,7 @@ public class HomePanel extends JPanel {
     private void loadPets() throws SQLException {
         petsPanel.removeAll();
 
-        UserPreferences defaultPrefs = new UserPreferences("温顺", "公寓", "多");
+        UserPreferences defaultPrefs = new UserPreferences(3,3,3,3,3,3);
         List<Animal> pets = matchService.match(defaultPrefs);
         
         System.out.println("HomePanel: 接收到 " + pets.size() + " 只宠物");
