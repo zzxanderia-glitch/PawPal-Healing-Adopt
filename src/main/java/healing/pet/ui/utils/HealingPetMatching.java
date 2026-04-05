@@ -3,6 +3,7 @@ package healing.pet.ui.utils;
 import healing.pet.model.Animal;
 import healing.pet.service.MatchService;
 import healing.pet.service.UserPreferences;
+import healing.pet.view.components.PetCardPanel;
 
 import javax.swing.*;
 import javax.swing.Timer;
@@ -10,6 +11,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
+import java.io.File;
 import java.util.*;
 import java.util.List;
 
@@ -25,10 +27,12 @@ public class HealingPetMatching extends JPanel {
         matchService = new MatchService();
 
         setLayout(new BorderLayout());
-        setBackground(new Color(255, 245, 235));
+        // 💡 修复：背景色跟随主题，而非固定死
+        setBackground(getThemeBg());
 
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
+        cardPanel.setBackground(getThemeBg()); // 同步 cardPanel 背景
 
         questionnairePanel = new QuestionnairePanel();
         resultPanel = new ResultPanel();
@@ -37,6 +41,15 @@ public class HealingPetMatching extends JPanel {
         cardPanel.add(resultPanel, "结果");
 
         add(cardPanel, BorderLayout.CENTER);
+    }
+
+    // 辅助方法：获取当前背景色
+    private Color getThemeBg() {
+        // 这里简单模拟，实际建议从 mainFrame 获取，但此处独立组件暂时先写死暗色匹配色
+        // 若要在 UI 中自动联动，通常需要传入 mainFrame 或 Theme 对象。
+        // 为简化，我们直接根据 UIManager 的 Panel.background 或硬编码暗色值。
+        Color panelBg = UIManager.getColor("Panel.background");
+        return panelBg != null ? panelBg : new Color(255, 245, 235);
     }
 
     class QuestionnairePanel extends JPanel {
@@ -49,7 +62,8 @@ public class HealingPetMatching extends JPanel {
 
         public QuestionnairePanel() {
             setLayout(new BorderLayout(15, 15));
-            setBackground(new Color(255, 245, 235));
+            // 💡 修复：跟随主题背景
+            setBackground(UIManager.getColor("Panel.background"));
             setBorder(new EmptyBorder(20, 20, 20, 20));
             initQuestions();
             initUI();
@@ -80,7 +94,8 @@ public class HealingPetMatching extends JPanel {
             add(imageLabel, BorderLayout.NORTH);
 
             questionPanel = new JPanel(new GridLayout(6, 2, 10, 10));
-            questionPanel.setBackground(new Color(255, 245, 235));
+            // 💡 修复：跟随主题背景
+            questionPanel.setBackground(UIManager.getColor("Panel.background"));
             questionPanel.setBorder(BorderFactory.createTitledBorder(
                     BorderFactory.createLineBorder(new Color(255, 180, 160), 2),
                     "  缘分小测验  ",
@@ -93,13 +108,14 @@ public class HealingPetMatching extends JPanel {
             for (int i = 0; i < questions.size(); i++) {
                 Question q = questions.get(i);
                 JLabel label = new JLabel(q.text);
-                label.setFont(new Font("Microsoft YaHei", Font.PLAIN, 14));
-                label.setForeground(new Color(100, 80, 70));
+                label.setFont(new Font("Microsoft YaHei", Font.BOLD, 16)); 
+                label.setForeground(Color.WHITE); 
+                
                 JComboBox<String> combo = new JComboBox<>(q.options);
                 combo.setFont(new Font("Microsoft YaHei", Font.PLAIN, 13));
                 combo.setSelectedIndex(2);
-                combo.setBackground(Color.WHITE);
-                combo.setForeground(new Color(80, 60, 50));
+                combo.setBackground(UIManager.getColor("ComboBox.background")); // 跟随主题下拉框背景
+                combo.setForeground(UIManager.getColor("ComboBox.foreground"));
                 combo.setCursor(new Cursor(Cursor.HAND_CURSOR));
                 final int questionIndex = i;
                 combo.addActionListener(e -> onAnswerChanged(questionIndex, combo));
@@ -338,29 +354,28 @@ public class HealingPetMatching extends JPanel {
     }
 
     class ResultPanel extends JPanel {
-        private JTextArea resultArea;
+        private JPanel resultsContainer;
+        private JScrollPane scrollPane;
 
         public ResultPanel() {
             setLayout(new BorderLayout(10, 10));
-            setBackground(new Color(255, 245, 235));
+            // 💡 修复：背景色跟随系统主题
+            setBackground(UIManager.getColor("Panel.background"));
             setBorder(new EmptyBorder(20, 20, 20, 20));
 
-            resultArea = new JTextArea();
-            resultArea.setEditable(false);
-            resultArea.setFont(new Font("Microsoft YaHei", Font.PLAIN, 15));
-            resultArea.setBackground(new Color(255, 250, 240));
-            resultArea.setLineWrap(true);
-            resultArea.setWrapStyleWord(true);
+            resultsContainer = new JPanel();
+            resultsContainer.setLayout(new BoxLayout(resultsContainer, BoxLayout.Y_AXIS));
+            resultsContainer.setBackground(UIManager.getColor("Panel.background")); // 跟随主题
+            resultsContainer.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
-            JScrollPane scrollPane = new JScrollPane(resultArea);
+            scrollPane = new JScrollPane(resultsContainer);
             scrollPane.setBorder(BorderFactory.createTitledBorder(
                     BorderFactory.createLineBorder(new Color(255, 180, 160), 2),
                     " 缘分报告 ",
                     SwingConstants.CENTER,
                     SwingConstants.TOP
             ));
-
-            scrollPane.getViewport().setBackground(new Color(255, 250, 245));
+            scrollPane.getViewport().setBackground(UIManager.getColor("Panel.background"));
 
             JButton backBtn = new JButton(" 重新测试 ");
             backBtn.setFont(new Font("Microsoft YaHei", Font.BOLD, 14));
@@ -390,24 +405,45 @@ public class HealingPetMatching extends JPanel {
         }
 
         public void setResults(List<MatchService.MatchResult> results, UserPreferences userPrefs) {
-            StringBuilder sb = new StringBuilder();
-            sb.append("    萌友缘分报告    \n\n");
+            resultsContainer.removeAll();
+
+            JPanel headerPanel = new JPanel(new BorderLayout());
+            // 💡 修复：跟随主题背景
+            headerPanel.setBackground(UIManager.getColor("Panel.background"));
+            headerPanel.setBorder(new EmptyBorder(0, 0, 15, 0));
+
+            JLabel titleLabel = new JLabel("萌友缘分报告", SwingConstants.CENTER);
+            titleLabel.setFont(new Font("Microsoft YaHei", Font.BOLD, 20));
+            // 💡 修复：标题颜色跟随主题（暗色模式下变亮）
+            titleLabel.setForeground(UIManager.getColor("Label.foreground"));
 
             if (!results.isEmpty()) {
                 double topMatch = results.get(0).getSimilarity() * 100;
-                sb.append("【总匹配度】").append(String.format("%.0f%%", topMatch)).append("\n\n");
+                JLabel matchLabel = new JLabel(String.format("总匹配度：%.0f%%", topMatch), SwingConstants.CENTER);
+                matchLabel.setFont(new Font("Microsoft YaHei", Font.PLAIN, 16));
+                matchLabel.setForeground(UIManager.getColor("Label.foreground"));
+
+                headerPanel.add(titleLabel, BorderLayout.NORTH);
+                headerPanel.add(matchLabel, BorderLayout.CENTER);
+            } else {
+                headerPanel.add(titleLabel, BorderLayout.CENTER);
             }
 
-            sb.append("【最适配的 3 位萌友】\n\n");
+            resultsContainer.add(headerPanel);
+
+            JSeparator separator = new JSeparator();
+            separator.setForeground(new Color(255, 180, 160));
+            separator.setMaximumSize(new Dimension(Integer.MAX_VALUE, 2));
+            resultsContainer.add(separator);
+            resultsContainer.add(Box.createVerticalStrut(15));
 
             for (int i = 0; i < Math.min(3, results.size()); i++) {
                 MatchService.MatchResult r = results.get(i);
                 Animal pet = r.getPet();
                 double matchPercent = r.getSimilarity() * 100;
-                sb.append(i+1).append(". ").append(pet.getName()).append("\n");
-                sb.append("   匹配度：").append(String.format("%.0f%%", matchPercent)).append("\n");
-                sb.append("   故事：").append(pet.getCareGuide()).append("\n");
-                sb.append("   合拍理由：").append(generateMatchReason(pet, userPrefs)).append("\n\n");
+                JPanel petResultCard = createPetResultCard(pet, matchPercent, i + 1, userPrefs);
+                resultsContainer.add(petResultCard);
+                resultsContainer.add(Box.createVerticalStrut(15));
             }
 
             String[] quotes = {
@@ -417,9 +453,158 @@ public class HealingPetMatching extends JPanel {
                     "爱，是最好的治愈良药~"
             };
             Random random = new Random();
-            sb.append("\n【治愈语录】").append(quotes[random.nextInt(quotes.length)]);
+            JPanel quotePanel = new JPanel(new BorderLayout());
+            quotePanel.setBackground(new Color(255, 230, 220));
+            quotePanel.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(new Color(255, 180, 160), 1),
+                    BorderFactory.createEmptyBorder(15, 20, 15, 20)
+            ));
 
-            resultArea.setText(sb.toString());
+            JLabel quoteLabel = new JLabel("💕 " + quotes[random.nextInt(quotes.length)], SwingConstants.CENTER);
+            quoteLabel.setFont(new Font("Microsoft YaHei", Font.ITALIC, 14));
+            quoteLabel.setForeground(new Color(150, 80, 70));
+            quotePanel.add(quoteLabel, BorderLayout.CENTER);
+
+            resultsContainer.add(quotePanel);
+
+            resultsContainer.revalidate();
+            resultsContainer.repaint();
+            scrollPane.getVerticalScrollBar().setValue(0);
+        }
+
+        private JPanel createPetResultCard(Animal pet, double matchPercent, int rank, UserPreferences userPrefs) {
+            JPanel card = new JPanel(new BorderLayout(15, 15));
+            // 💡 修复：卡片背景跟随主题（暗色模式下为浅灰）
+            card.setBackground(UIManager.getColor("Panel.background"));
+            
+            // 💡 修复：暗色模式下边框颜色变暗
+            boolean isDark = UIManager.getColor("Panel.background").getRed() < 50;
+            Color borderColor = isDark ? new Color(80, 80, 85) : new Color(255, 180, 160);
+            
+            card.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(borderColor, 2),
+                    BorderFactory.createEmptyBorder(15, 15, 15, 15)
+            ));
+            card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 220));
+
+            JPanel leftPanel = new JPanel(new BorderLayout(10, 10));
+            leftPanel.setBackground(UIManager.getColor("Panel.background"));
+            leftPanel.setPreferredSize(new Dimension(180, 190));
+
+            try {
+                ImageIcon icon = loadPetImageIcon(pet.getPhotoPath(), 160, 160);
+                JLabel imageLabel = new JLabel(icon, SwingConstants.CENTER);
+                imageLabel.setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230), 1));
+                leftPanel.add(imageLabel, BorderLayout.CENTER);
+            } catch (Exception e) {
+                JLabel noImageLabel = new JLabel("🐾", SwingConstants.CENTER);
+                noImageLabel.setFont(new Font("Microsoft YaHei", Font.PLAIN, 60));
+                noImageLabel.setForeground(new Color(200, 200, 200));
+                leftPanel.add(noImageLabel, BorderLayout.CENTER);
+            }
+
+            JPanel rightPanel = new JPanel();
+            rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
+            rightPanel.setBackground(UIManager.getColor("Panel.background"));
+
+            JPanel rankAndNamePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+            rankAndNamePanel.setBackground(UIManager.getColor("Panel.background"));
+
+            JLabel rankLabel = new JLabel("#" + rank);
+            rankLabel.setFont(new Font("Microsoft YaHei", Font.BOLD, 24));
+            rankLabel.setForeground(new Color(255, 150, 130));
+
+            JLabel nameLabel = new JLabel(pet.getName());
+            nameLabel.setFont(new Font("Microsoft YaHei", Font.BOLD, 20));
+            nameLabel.setForeground(UIManager.getColor("Label.foreground")); // 跟随主题
+
+            rankAndNamePanel.add(rankLabel);
+            rankAndNamePanel.add(nameLabel);
+
+            rightPanel.add(rankAndNamePanel);
+            rightPanel.add(Box.createVerticalStrut(8));
+
+            JPanel matchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+            matchPanel.setBackground(UIManager.getColor("Panel.background"));
+
+            JLabel matchLabel = new JLabel("匹配度：");
+            matchLabel.setFont(new Font("Microsoft YaHei", Font.PLAIN, 15));
+            matchLabel.setForeground(UIManager.getColor("Label.foreground"));
+
+            JLabel percentLabel = new JLabel(String.format("%.0f%%", matchPercent));
+            percentLabel.setFont(new Font("Microsoft YaHei", Font.BOLD, 18));
+            percentLabel.setForeground(new Color(255, 100, 80));
+
+            matchPanel.add(matchLabel);
+            matchPanel.add(percentLabel);
+
+            rightPanel.add(matchPanel);
+            rightPanel.add(Box.createVerticalStrut(10));
+
+            // 💡 修复：故事和理由文本颜色跟随主题
+            JLabel storyLabel = new JLabel("<html><div style='width: 350px;'>📖 " + 
+                    (pet.getCareGuide() != null && !pet.getCareGuide().isEmpty() ? 
+                    pet.getCareGuide() : "暂无故事") + "</div></html>");
+            storyLabel.setFont(new Font("Microsoft YaHei", Font.PLAIN, 13));
+            storyLabel.setForeground(UIManager.getColor("Label.foreground"));
+            rightPanel.add(storyLabel);
+
+            rightPanel.add(Box.createVerticalStrut(8));
+
+            JLabel reasonLabel = new JLabel("<html><div style='width: 350px;'>✨ " + 
+                    generateMatchReason(pet, userPrefs) + "</div></html>");
+            reasonLabel.setFont(new Font("Microsoft YaHei", Font.PLAIN, 13));
+            reasonLabel.setForeground(UIManager.getColor("Label.foreground"));
+            rightPanel.add(reasonLabel);
+
+            card.add(leftPanel, BorderLayout.WEST);
+            card.add(rightPanel, BorderLayout.CENTER);
+
+            return card;
+        }
+
+        private ImageIcon loadPetImageIcon(String photoPath, int width, int height) {
+            try {
+                String path = photoPath;
+                if (path.startsWith("/") || path.startsWith("\\")) {
+                    path = path.substring(1);
+                }
+                if (path.startsWith("images/")) {
+                    path = path.substring(7);
+                }
+
+                BufferedImage img = null;
+                java.io.InputStream is = getClass().getClassLoader().getResourceAsStream("images/" + path);
+                if (is != null) {
+                    img = javax.imageio.ImageIO.read(is);
+                    is.close();
+                }
+
+                if (img == null) {
+                    File imgFile = new File("src/main/resources/images/" + path);
+                    if (imgFile.exists()) {
+                        img = javax.imageio.ImageIO.read(imgFile);
+                    }
+                }
+
+                if (img != null) {
+                    Image scaled = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+                    return new ImageIcon(scaled);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            BufferedImage placeholder = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g2d = placeholder.createGraphics();
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2d.setColor(new Color(240, 245, 250));
+            g2d.fillRoundRect(0, 0, width, height, 16, 16);
+            g2d.setColor(new Color(180, 180, 180));
+            g2d.setFont(new Font("Microsoft YaHei", Font.PLAIN, 14));
+            g2d.drawString("暂无图片", width / 2 - 30, height / 2);
+            g2d.dispose();
+            return new ImageIcon(placeholder);
         }
 
         private String generateMatchReason(Animal pet, UserPreferences userPrefs) {

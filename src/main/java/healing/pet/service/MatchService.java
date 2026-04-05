@@ -36,6 +36,11 @@ public class MatchService {
     public List<Animal> match(UserPreferences preferences) throws SQLException {
         List<Animal> allPets = petDAO.getAllPets();
 
+        // 过滤：只保留状态为 0（待领养）的宠物
+        allPets = allPets.stream()
+                .filter(pet -> pet.getStatus() == 0)
+                .collect(Collectors.toList());
+
         // 为每只宠物计算特征向量
         Map<Animal, double[]> petVectors = new HashMap<>();
         for (Animal pet : allPets) {
@@ -66,6 +71,9 @@ public class MatchService {
         double[] userVec = preferences.toVector();
 
         for (Animal pet : allPets) {
+            // 过滤：只保留状态为 0（待领养）的宠物
+            if (pet.getStatus() != 0) continue;
+            
             double[] petVec = extractPetVector(pet);
             double similarity = cosineSimilarityWithWeights(userVec, petVec);
             results.add(new MatchResult(pet, similarity));

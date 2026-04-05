@@ -1,10 +1,8 @@
 package healing.pet.ui.content;
 
+import healing.pet.dao.PetDAO;
+import healing.pet.dao.PetDAOImpl;
 import healing.pet.model.Animal;
-import healing.pet.model.Cat;
-import healing.pet.model.Dog;
-import healing.pet.service.MatchService;
-import healing.pet.service.UserPreferences;
 import healing.pet.view.MainFrame;
 import healing.pet.view.components.PetCardPanel;
 
@@ -16,73 +14,81 @@ import java.util.List;
 public class HomePanel extends JPanel {
 
     private MainFrame mainFrame;
-    private MatchService matchService;
+    private PetDAO petDAO;
     private JPanel petsPanel;
+    private JScrollPane scrollPane;
 
     public HomePanel(MainFrame mainFrame) throws SQLException {
         this.mainFrame = mainFrame;
-        this.matchService = new MatchService();
+        this.petDAO = new PetDAOImpl();
 
         applyTheme();
         setLayout(new BorderLayout());
 
-        JLabel titleLabel = new JLabel("🐾 萌友速配 - 宠物列表", SwingConstants.CENTER);
+        // 顶部标题
+        JLabel titleLabel = new JLabel("萌友速配 - 宠物列表", SwingConstants.CENTER);
         titleLabel.setFont(mainFrame.getCurrentTheme().getTitleFont());
         titleLabel.setBorder(mainFrame.getCurrentTheme().createTitleBorder());
         add(titleLabel, BorderLayout.NORTH);
 
+        // 宠物展示面板
         petsPanel = new JPanel();
         petsPanel.setLayout(new GridLayout(0, 5, 15, 15));
         petsPanel.setBackground(mainFrame.getCurrentTheme().getContentBackgroundColor());
 
-        loadPets();
-
-        JScrollPane scrollPane = new JScrollPane(petsPanel);
+        // 💡 修复：正确初始化滚动条
+        scrollPane = new JScrollPane(petsPanel);
         scrollPane.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setOpaque(false);
+        scrollPane.getViewport().setOpaque(false);
+
         add(scrollPane, BorderLayout.CENTER);
+
+        loadPets();
     }
 
     private void loadPets() throws SQLException {
         petsPanel.removeAll();
-
-        UserPreferences defaultPrefs = new UserPreferences(3, 3, 3, 3, 3, 3);
-        List<Animal> pets = matchService.match(defaultPrefs);
-
-        System.out.println("HomePanel: 接收到 " + pets.size() + " 只宠物");
+        List<Animal> pets = petDAO.getAllPets();
 
         if (pets == null || pets.isEmpty()) {
-            System.out.println("HomePanel: 宠物列表为空！");
             JLabel noDataLabel = new JLabel("暂无宠物数据", SwingConstants.CENTER);
             noDataLabel.setFont(mainFrame.getCurrentTheme().getContentFont());
-            noDataLabel.setForeground(mainFrame.getCurrentTheme().getContentTextColor());
             petsPanel.add(noDataLabel);
         } else {
-            System.out.println("HomePanel: 开始创建 " + pets.size() + " 个宠物卡片");
-            int catCount = 0;
-            int dogCount = 0;
             for (Animal pet : pets) {
-                PetCardPanel petCard = new PetCardPanel(pet);
+                PetCardPanel petCard = new PetCardPanel(mainFrame, pet);
                 petsPanel.add(petCard);
-                if (pet instanceof Cat) catCount++;
-                else if (pet instanceof Dog) dogCount++;
             }
-            System.out.println("HomePanel: 猫=" + catCount + ", 狗=" + dogCount);
         }
 
-        petsPanel.revalidate();
-        petsPanel.repaint();
+        // 💡 修复：异步重置滚动位置并重绘
+        SwingUtilities.invokeLater(() -> {
+            scrollPane.getVerticalScrollBar().setValue(0);
+            petsPanel.revalidate();
+            petsPanel.repaint();
+        });
     }
 
     public void refreshPets() throws SQLException {
         loadPets();
     }
+    
+    public void resetScrollToTop() {
+        SwingUtilities.invokeLater(() -> {
+            if (scrollPane != null) {
+                scrollPane.getVerticalScrollBar().setValue(0);
+            }
+        });
+    }
 
     public void applyTheme() {
         if (mainFrame != null) {
             setBackground(mainFrame.getCurrentTheme().getContentBackgroundColor());
-        } else {
-            setBackground(Color.WHITE);
+            if (petsPanel != null) {
+                petsPanel.setBackground(mainFrame.getCurrentTheme().getContentBackgroundColor());
+            }
         }
     }
 }

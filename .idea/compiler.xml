@@ -6,11 +6,9 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="PawPal" />
         <module name="PawPal-Healing-Adopt" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="PawPal" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
 </project>
