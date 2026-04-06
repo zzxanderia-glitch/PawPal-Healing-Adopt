@@ -2,6 +2,8 @@ package healing.pet.ui.content;
 
 import healing.pet.ui.utils.HealingPetMatching;
 import healing.pet.view.MainFrame;
+import healing.pet.view.components.MyAdoptionPanel;
+
 import javax.swing.*;
 import java.awt.*;
 import java.sql.SQLException;
@@ -50,6 +52,7 @@ public class ContentPanel extends JPanel {
         contentCards.add(new HomePanel(mainFrame), "home");
         contentCards.add(new MatchPanel(mainFrame), "match");
         contentCards.add(new SettingPanel(mainFrame), "setting");
+        contentCards.add(new MyAdoptionPanel(mainFrame), "my_adoption");
 
         // 💡 修复：这里应该添加 AdminPetPanel（容器），而不是 AdminPetRowPanel（单行组件）
         contentCards.add(new AdminPetPanel(mainFrame), "admin_pet");
@@ -62,7 +65,7 @@ public class ContentPanel extends JPanel {
     public void showPage(String pageName) {
         // 安全拦截：如果是管理员页面但当前不是管理员权限，跳提示（可选）
         if (pageName.startsWith("admin_") && !isAdmin) {
-            JOptionPane.showMessageDialog(mainFrame, "⚠️ 权限不足，请先验证管理员身份。");
+            JOptionPane.showMessageDialog(mainFrame, "权限不足，请先验证管理员身份。");
             return;
         }
         cardLayout.show(contentCards, pageName);
@@ -100,4 +103,11 @@ public class ContentPanel extends JPanel {
     public boolean isAdmin() {
         return isAdmin;
     }
-}
+    public void refresh() {
+        for (Component comp : contentCards.getComponents()) {
+            if (comp instanceof HomePanel) {
+                ((HomePanel) comp).refresh();
+            } else if (comp instanceof MyAdoptionPanel) {
+                ((MyAdoptionPanel) comp).refresh();
+            }
+}}}

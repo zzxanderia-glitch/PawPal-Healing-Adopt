@@ -126,6 +126,11 @@ public class MatchService {
                 description = "独立 安静 适合小空间 不掉毛";
             }
         }
+        String habits = pet.getHabits() != null ? pet.getHabits().toLowerCase() : "";
+        String preference = pet.getPreference() != null ? pet.getPreference().toLowerCase() : "";
+        String detailStory = pet.getDetailStory() != null ? pet.getDetailStory().toLowerCase() : "";
+
+        String fullDescription = description + " " + habits + " " + preference + " " + detailStory;
 
         // ---------- 关键词打分规则 ----------
         // 1. 性格合拍
