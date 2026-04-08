@@ -116,6 +116,11 @@ public class MainFrame extends JFrame {
     public Theme getCurrentTheme() {
         return currentTheme;
     }
+    public void refreshContent() {
+        if (contentPanel != null) {
+            contentPanel.refresh();
+        }
+    }
 
     // 这里不再使用本地 isAdmin 变量，始终从 UserContext 获取，保证一致性
     public boolean isAdmin() {

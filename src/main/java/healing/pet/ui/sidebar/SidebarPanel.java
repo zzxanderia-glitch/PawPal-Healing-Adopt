@@ -79,10 +79,15 @@ public class SidebarPanel extends JPanel {
             add(Box.createVerticalStrut(10));
         } else {
             JButton matchBtn = createStyledButton("智能匹配", "match", "footprint.svg", isAdmin);
+            JButton myAdoptionBtn = createStyledButton("我的领养", "my_adoption", "bone.svg", isAdmin);
             add(matchBtn);
             allMenuButtons.add(matchBtn);
             add(Box.createVerticalStrut(10));
+            add(myAdoptionBtn);
+            allMenuButtons.add(myAdoptionBtn);
+            add(Box.createVerticalStrut(10));
         }
+
 
         // 底部设置
         add(Box.createVerticalGlue());

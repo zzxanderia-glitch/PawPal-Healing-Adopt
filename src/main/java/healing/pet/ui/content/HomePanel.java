@@ -83,12 +83,21 @@ public class HomePanel extends JPanel {
         });
     }
 
+    // ... existing code ...
     public void applyTheme() {
         if (mainFrame != null) {
             setBackground(mainFrame.getCurrentTheme().getContentBackgroundColor());
             if (petsPanel != null) {
                 petsPanel.setBackground(mainFrame.getCurrentTheme().getContentBackgroundColor());
             }
+        }
+    }
+
+    public void refresh() {
+        try {
+            loadPets();
+        } catch (SQLException e) {
+            System.err.println("刷新宠物列表失败：" + e.getMessage());
         }
     }
 }

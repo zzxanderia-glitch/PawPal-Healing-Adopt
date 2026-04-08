@@ -497,7 +497,7 @@ public class HealingPetMatching extends JPanel {
                 imageLabel.setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230), 1));
                 leftPanel.add(imageLabel, BorderLayout.CENTER);
             } catch (Exception e) {
-                JLabel noImageLabel = new JLabel("🐾", SwingConstants.CENTER);
+                JLabel noImageLabel = new JLabel("No Image", SwingConstants.CENTER);
                 noImageLabel.setFont(new Font("Microsoft YaHei", Font.PLAIN, 60));
                 noImageLabel.setForeground(new Color(200, 200, 200));
                 leftPanel.add(noImageLabel, BorderLayout.CENTER);

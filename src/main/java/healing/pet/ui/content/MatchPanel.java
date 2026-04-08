@@ -29,7 +29,7 @@ public class MatchPanel extends JPanel {
         setBackground(mainFrame.getCurrentTheme().getContentBackgroundColor());
         setBorder(BorderFactory.createEmptyBorder(30, 40, 30, 40));
 
-        JLabel titleLabel = new JLabel("🎯 智能匹配 - 找到你的专属萌宠", SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel("智能匹配 - 找到你的专属萌宠", SwingConstants.CENTER);
         titleLabel.setFont(mainFrame.getCurrentTheme().getTitleFont());
         add(titleLabel, BorderLayout.NORTH);
 

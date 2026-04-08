@@ -23,7 +23,7 @@ public class AdminPetPanel extends JPanel {
         setLayout(new BorderLayout());
         setOpaque(false);
 
-        JLabel titleLabel = new JLabel("🐾 宠物档案管理库", SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel("宠物档案管理库", SwingConstants.CENTER);
         titleLabel.setFont(new Font("微软雅黑", Font.BOLD, 24));
         titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
         add(titleLabel, BorderLayout.NORTH);
@@ -42,7 +42,7 @@ public class AdminPetPanel extends JPanel {
         JPanel toolBar = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         toolBar.setOpaque(false);
 
-        JButton refreshBtn = new JButton("🔄 刷新列表");
+        JButton refreshBtn = new JButton("刷新列表");
         refreshBtn.setPreferredSize(new Dimension(120, 40));
         refreshBtn.setBackground(new Color(110, 170, 240));
         refreshBtn.setForeground(Color.WHITE);
@@ -73,7 +73,7 @@ public class AdminPetPanel extends JPanel {
         } else {
             for (int i = 0; i < pets.size(); i++) {
                 Animal pet = pets.get(i);
-                AdminPetRowPanel rowPanel = new AdminPetRowPanel(mainFrame, pet);
+                AdminPetRowPanel rowPanel = new AdminPetRowPanel(mainFrame, pet,this);
                 petsListPanel.add(rowPanel);
 
                 if (i < pets.size() - 1) {
@@ -87,5 +87,12 @@ public class AdminPetPanel extends JPanel {
             petsListPanel.revalidate();
             petsListPanel.repaint();
         });
+    }
+    public void refresh() {
+        try {
+            loadPets();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "刷新失败：" + e.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }

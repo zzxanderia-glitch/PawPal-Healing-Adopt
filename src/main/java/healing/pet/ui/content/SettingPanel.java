@@ -99,7 +99,7 @@ public class SettingPanel extends JPanel {
         whiteboard.add(nameLabel, gbc);
 
         gbc.gridy = 2;
-        JLabel statsLabel = new JLabel("🐾 已成功领养宠物：0 只", JLabel.CENTER);
+        JLabel statsLabel = new JLabel("已成功领养宠物：0 只", JLabel.CENTER);
         // 💡 修复：文字颜色跟随主题（暗色模式下变亮）
         statsLabel.setForeground(isAdmin ? mainFrame.getCurrentTheme().getContentTextColor() : new Color(120, 120, 120));
         statsLabel.setFont(new Font("微软雅黑", Font.PLAIN, 14));
