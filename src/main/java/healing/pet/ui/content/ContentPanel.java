@@ -50,10 +50,11 @@ public class ContentPanel extends JPanel {
         contentCards.add(new MatchPanel(mainFrame), "match");
         contentCards.add(new SettingPanel(mainFrame), "setting");
 
-        // 💡 修复：这里应该添加 AdminPetPanel（容器），而不是 AdminPetRowPanel（单行组件）
         contentCards.add(new AdminPetPanel(mainFrame), "admin_pet");
         contentCards.add(new AdminAuditPanel(mainFrame), "admin_audit");
+        contentCards.add(new AdminFeedbackPanel(mainFrame), "admin_feedback");
         contentCards.add(new MyAdoptionPanel(mainFrame), "my_adoption");
+        contentCards.add(new healing.pet.view.components.UserFeedbackPanel(mainFrame), "feedback");
     }
 
     /**
@@ -121,10 +122,23 @@ public class ContentPanel extends JPanel {
                     }
                 }
                 // 如果是 AdminAuditPanel，重新加载审核列表
-                // 如果是 AdminAuditPanel，重新加载审核列表
                 else if (comp instanceof AdminAuditPanel) {
                     try {
                         ((AdminAuditPanel) comp).refresh();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                else if (comp instanceof AdminFeedbackPanel) {
+                    try {
+                        ((AdminFeedbackPanel) comp).refresh();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                else if (comp instanceof healing.pet.view.components.UserFeedbackPanel) {
+                    try {
+                        ((healing.pet.view.components.UserFeedbackPanel) comp).refresh();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

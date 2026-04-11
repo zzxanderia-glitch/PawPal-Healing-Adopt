@@ -55,7 +55,6 @@ public class SidebarPanel extends JPanel {
         add(Box.createVerticalStrut(30));
 
         // --- 按钮分流加载 ---
-        // 💡 管理员不显示首页，只显示管理工具
         if (!isAdmin) {
             JButton homeBtn = createStyledButton("首页中心", "home", "homepage.svg", isAdmin);
             add(homeBtn);
@@ -73,18 +72,25 @@ public class SidebarPanel extends JPanel {
 
             JButton manageBtn = createStyledButton("宠物管理", "admin_pet", "bone.svg", isAdmin);
             JButton auditBtn = createStyledButton("领养审批", "admin_audit", "footprint.svg", isAdmin);
+            JButton feedbackManageBtn = createStyledButton("反馈管理", "admin_feedback", "setting.svg", isAdmin);
             add(manageBtn); allMenuButtons.add(manageBtn);
             add(Box.createVerticalStrut(10));
             add(auditBtn); allMenuButtons.add(auditBtn);
             add(Box.createVerticalStrut(10));
+            add(feedbackManageBtn); allMenuButtons.add(feedbackManageBtn);
+            add(Box.createVerticalStrut(10));
         } else {
             JButton matchBtn = createStyledButton("智能匹配", "match", "footprint.svg", isAdmin);
             JButton myAdoptionBtn = createStyledButton("我的领养", "my_adoption", "bone.svg", isAdmin);
+            JButton feedbackBtn = createStyledButton("意见反馈", "feedback", "setting.svg", isAdmin);
             add(matchBtn);
             allMenuButtons.add(matchBtn);
             add(Box.createVerticalStrut(10));
             add(myAdoptionBtn);
             allMenuButtons.add(myAdoptionBtn);
+            add(Box.createVerticalStrut(10));
+            add(feedbackBtn);
+            allMenuButtons.add(feedbackBtn);
             add(Box.createVerticalStrut(10));
         }
 
@@ -121,7 +127,6 @@ public class SidebarPanel extends JPanel {
         Theme theme = mainFrame.getCurrentTheme();
         FlatSVGIcon icon = new FlatSVGIcon("icon/" + svgName, 18, 18);
 
-        // 💡 图标颜色跟随主题文字颜色，而非硬编码白色
         icon.setColorFilter(new FlatSVGIcon.ColorFilter(color -> theme.getSidebarTextColor()));
 
         JButton button = new JButton(text, icon);
@@ -134,7 +139,6 @@ public class SidebarPanel extends JPanel {
         button.setFocusPainted(false);
         button.setContentAreaFilled(true);
 
-        // 初始颜色
         button.setBackground(new Color(0, 0, 0, 0));
         button.setForeground(theme.getSidebarTextColor());
         button.setFont(theme.getButtonFont());
