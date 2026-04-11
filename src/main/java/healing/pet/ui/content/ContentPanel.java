@@ -2,14 +2,13 @@ package healing.pet.ui.content;
 
 import healing.pet.ui.utils.HealingPetMatching;
 import healing.pet.view.MainFrame;
+import healing.pet.view.components.MyAdoptionPanel;
+
 import javax.swing.*;
 import java.awt.*;
 import java.sql.SQLException;
 
-/**
- * 内容面板：基于 CardLayout 实现页面切换
- * 组长控制中心：整合首页、匹配、设置，以及管理员专用的管理与审批页面
- */
+
 public class ContentPanel extends JPanel {
     private CardLayout cardLayout;
     private JPanel contentCards;
@@ -54,6 +53,7 @@ public class ContentPanel extends JPanel {
         // 💡 修复：这里应该添加 AdminPetPanel（容器），而不是 AdminPetRowPanel（单行组件）
         contentCards.add(new AdminPetPanel(mainFrame), "admin_pet");
         contentCards.add(new AdminAuditPanel(mainFrame), "admin_audit");
+        contentCards.add(new MyAdoptionPanel(mainFrame), "my_adoption");
     }
 
     /**
@@ -99,5 +99,41 @@ public class ContentPanel extends JPanel {
 
     public boolean isAdmin() {
         return isAdmin;
+    }
+    public void refresh() {
+        // 获取当前正在显示的组件
+        for (Component comp : contentCards.getComponents()) {
+            if (comp.isVisible()) {
+                // 如果是 HomePanel，重新加载宠物列表
+                if (comp instanceof HomePanel) {
+                    try {
+                        ((HomePanel) comp).loadPets();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+                // 如果是 AdminPetPanel，重新加载管理列表
+                else if (comp instanceof AdminPetPanel) {
+                    try {
+                        ((AdminPetPanel) comp).loadPets();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+                // 如果是 AdminAuditPanel，重新加载审核列表
+                // 如果是 AdminAuditPanel，重新加载审核列表
+                else if (comp instanceof AdminAuditPanel) {
+                    try {
+                        ((AdminAuditPanel) comp).refresh();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                break;
+            }
+        }
+        revalidate();
+        repaint();
     }
 }

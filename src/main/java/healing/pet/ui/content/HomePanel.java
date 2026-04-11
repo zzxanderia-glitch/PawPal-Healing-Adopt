@@ -48,7 +48,7 @@ public class HomePanel extends JPanel {
         loadPets();
     }
 
-    private void loadPets() throws SQLException {
+    public void loadPets() throws SQLException {
         petsPanel.removeAll();
         List<Animal> pets = petDAO.getAllPets();
 

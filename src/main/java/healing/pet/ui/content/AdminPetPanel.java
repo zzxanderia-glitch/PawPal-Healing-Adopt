@@ -61,7 +61,7 @@ public class AdminPetPanel extends JPanel {
         loadPets();
     }
 
-    private void loadPets() throws SQLException {
+    public void loadPets() throws SQLException {
         petsListPanel.removeAll();
         List<Animal> pets = petDAO.getAllPets();
 

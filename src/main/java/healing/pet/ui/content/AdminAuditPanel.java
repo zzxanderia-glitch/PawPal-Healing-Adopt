@@ -89,6 +89,14 @@ public class AdminAuditPanel extends JPanel {
         listPanel.repaint();
     }
 
+    public void refresh() {
+        try {
+            loadAuditRequests();
+        } catch (SQLException e) {
+            showError("刷新失败：" + e.getMessage());
+        }
+    }
+
     private void showError(String message) {
         listPanel.removeAll();
         JLabel errorLabel = new JLabel(message);

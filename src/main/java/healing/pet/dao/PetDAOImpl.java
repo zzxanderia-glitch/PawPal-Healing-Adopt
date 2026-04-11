@@ -1,4 +1,4 @@
-package com.healing.pet.dao;
+package healing.pet.dao;
 
 import healing.pet.model.Animal;
 import healing.pet.model.Cat;
